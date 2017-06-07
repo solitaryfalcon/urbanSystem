@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <!-- Load Leaflet from CDN-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet-src.js"></script>
+
+  <!-- leaflet ChineseTmsProviders -->
+  <script type="text/javascript" src="../JS/leaflet.ChineseTmsProviders.js"></script>
+
+  <!-- Bootstrap -->
+  <link href="../Style/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet@2.0.4"></script>
+
+  <!-- Load EChart -->
+  <script src="../JS/echarts.common.min.js"></script>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+  <style>
+    #map {
+      position: absolute;
+      top:0;
+      bottom:0;
+      right:0;
+      left:0;
+      z-index:0;
+    }
+    #line-chart{
+      position: absolute;
+      z-index: 1000;
+      width: 900px;
+      height:500px;
+      left:0;
+      right:0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+<div id="container">
+  <div id="map"></div>
+  <div id="line-chart"></div>
+</div>
+
+
+  <script>
+    var map = L.map('map',{
+      editable: true,
+      dragging: false,
+      zoomControl: false
+    }).setView([38.678, 108.068], 5);
+    L.tileLayer.chinaProvider('Geoq.Normal.PurplishBlue',{maxZoom:5,minZoom:5}).addTo(map);
+  </script>
+
+  <script  src="../JS/analysis.js"></script>
+</body>
+</html>

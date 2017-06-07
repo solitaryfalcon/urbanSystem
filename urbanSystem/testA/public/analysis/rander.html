@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
+    <title>Symbol size, outline width based on map scale</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.16/esri/css/esri.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel=stylesheet href=range.css>
+    <link rel=stylesheet/less href=range.less>
+    <script src="https://js.arcgis.com/3.16/"></script>
+    <script>
+        var map;
+        var layer = '';
+        var anLayer = '';
+        var selectedFactor = "";
+
+        require([
+		"dojo/on",
+		"dojo/dom",
+        "esri/Color",
+        "esri/dijit/Legend",
+        "esri/dijit/PopupTemplate",
+        "esri/layers/FeatureLayer",
+
+        "esri/map",
+        "esri/renderers/ClassBreaksRenderer",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/SimpleMarkerSymbol",
+
+        "dojo/domReady!"
+      ],
+            function (on, dom, Color, Legend, PopupTemplate, FeatureLayer,
+                Map, ClassBreaksRenderer, SimpleFillSymbol, SimpleMarkerSymbol) {
+
+                map = new Map("mapDiv", {
+                    basemap: "dark-gray",
+                    //                basemap: "hybrid",
+                    center: [116, 32], // lon, lat
+                    zoom: 5,
+                    minZoom: 3,
+                    maxZoom: 10,
+                    logo: false
+                });
+                //                var chinaProvince = "http://10.10.38.133:6080/arcgis/rest/services/chinaMapDark/MapServer/0";
+                //                chinaLayer = new FeatureLayer(chinaProvince);
+                //                map.addLayer(chinaLayer);
+                var layerUrl = "http://10.20.47.32:6080/arcgis/rest/services/Server_Timeline/MapServer/0";
+                //var rendererField = "土地面";  //Average farm expenses
+
+                var legend = '';
+
+                function getQueryString(param) {
+                    var reg = new RegExp("(^|&)" + param + "=([^&]*)(&|$)");
+                    var result = window.location.search.substr(1).match(reg);
+                    return result ? decodeURIComponent(result[2]) : null;
+                }
+
+                var area1 = getQueryString('area1');
+                var area2 = getQueryString('area2');
+                var element = getQueryString('element');
+                var elementLabel = getQueryString('elementLabel');
+
+                function getAreaCities(area) {
+                    var temp = [];
+                    switch (area) {
+                    case '长三角':
+                        temp = ['上海市', '南京市', '无锡市', '徐州市', '常州市', '苏州市', '常熟市', '南通市', '连云港市', '淮安市', '盐城市', '扬州市', '镇江市', '泰州市', '宿迁市', '杭州市', '宁波市', '温州市', '嘉兴市', '湖州市', '绍兴市', '金华市', '衢州市', '舟山市', '丽水市', '淮南市', '滁州市', '合肥市', '马鞍山市', '芜湖市'];
+                        break;
+                    case '京津冀':
+                        temp = ['北京市', '天津市', '石家庄市', '唐山市', '秦皇岛市', '邯郸市', '邢台市', '保定市', '张家口市', '承德市', '沧州市', '廊坊市', '衡水市'];
+                        break;
+                    case '珠三角':
+                        temp = ['肇庆市', '佛山市', '广州市', '东莞市', '惠州市', '江门市', '中山市', '深圳市', '珠海市', '香港', '澳门'];
+                        break;
+                    case '辽中南':
+                        temp = ['沈阳市', '大连市', '鞍山市', '抚顺市', '本溪市', '丹东市', '营口市', '辽阳市', '盘锦市', '铁岭市'];
+                        break;
+                    }
+                    return temp;
+                }
+
+                function Refresh(year) {
+                    if (layer != '') {
+                        map.removeLayer(layer);
+                        map.removeLayer(anLayer);
+                    }
+                    //                    selectedFactor = document.getElementById('r1').value; //取得所选元素
+                    selectedFactor = element;
+
+                    var rendererField = selectedFactor;
+                    //----------------------
+                    // Create renderer
+                    //----------------------
+
+                    var renderer = new ClassBreaksRenderer();
+                    renderer.attributeField = rendererField;
+
+                    //----------------------
+                    // Fill symbol
+                    //----------------------
+
+                    // (1) Define a FILL symbol used to draw county polygons.
+                    var fillSymbol = new SimpleFillSymbol();
+                    fillSymbol.setColor(new Color([0, 0, 0, 0]));
+                    fillSymbol.outline.setColor(new Color([133, 133, 133, .5]));
+                    fillSymbol.outline.setWidth(1);
+
+                    renderer.backgroundFillSymbol = fillSymbol;
+
+                    //----------------------
+                    // Circle marker symbol
+                    //----------------------
+
+                    // (2.A) Define circle MARKER symbol to be drawn at the centroid
+                    // of each polygon.
+                    var markerSymbol = new SimpleMarkerSymbol();
+                    markerSymbol.setColor(new Color([599, 299, 50, 1]));
+                    markerSymbol.setSize(12);
+                    markerSymbol.outline.setColor(new Color([51, 51, 51, 1]));
+                    markerSymbol.outline.setWidth(0.5);
+
+                    // (2.B) Make sure the MARKER symbol defined above is used to
+                    // draw polygons that have valid numeric field value.
+                    renderer.addBreak({
+                        minValue: -9007199254740991,
+                        maxValue: 9007199254740991,
+                        symbol: markerSymbol
+                    });
+
+                    var anRenderer = new ClassBreaksRenderer();
+                    anRenderer.attributeField = rendererField;
+
+                    anRenderer.backgroundFillSymbol = fillSymbol;
+
+                    var anMarkerSymbol = new SimpleMarkerSymbol();
+                    anMarkerSymbol.setColor(new Color([0,255,255]));
+                    anMarkerSymbol.setSize(12);
+                    anMarkerSymbol.outline.setColor(new Color([51, 51, 51, 1]));
+                    anMarkerSymbol.outline.setWidth(0.5);
+
+                    anRenderer.addBreak({
+                        minValue: -9007199254740991,
+                        maxValue: 9007199254740991,
+                        symbol: anMarkerSymbol
+                    });
+
+                    //----------------------
+                    // Visual variables
+                    //----------------------
+
+                    //根据所选元素最大值确定图例圆点大小
+                    var maxValue;
+                    if (selectedFactor == "土地面") {
+                        maxValue = 1300;
+                    } else if (selectedFactor == "第一产") {
+                        maxValue = 52;
+                    } else if (selectedFactor == "第二产") {
+                        maxValue = 83;
+                    } else if (selectedFactor == "第三产") {
+                        maxValue = 85;
+                    } else if (selectedFactor == "人口密") {
+                        maxValue = 2616;
+                    } else if (selectedFactor == "年末部") {
+                        maxValue = 3358;
+                    } else if (selectedFactor == "人均地") {
+                        maxValue = 227116;
+                    }
+                    //地方财政收入
+                    else if (selectedFactor == "地方财") {
+                        maxValue = 41095087;
+                    } else if (selectedFactor == "医院卫") {
+                        maxValue = 136700;
+                    } else if (selectedFactor == "城市建") {
+                        maxValue = 1505;
+                    } else if (selectedFactor == "居住用") {
+                        maxValue = 382;
+                    } else if (selectedFactor == "工业企") {
+                        maxValue = 10776;
+                    } else if (selectedFactor == "全年供") {
+                        maxValue = 319072;
+                    } else if (selectedFactor == "全年用") {
+                        maxValue = 14106000; //全年用电
+                    } else if (selectedFactor == "全部从") {
+                        maxValue = 924;
+                    } else if (selectedFactor == "工业用") {
+                        maxValue = 7994500;
+                    } else if (selectedFactor == "高等学") {
+                        maxValue = 66026;
+                    } else if (selectedFactor == "普通中") {
+                        maxValue = 113880;
+                    } else if (selectedFactor == "小学教") {
+                        maxValue = 115204; //小学教师数
+                    } else if (selectedFactor == "医院数_") {
+                        maxValue = 1931;
+                    } else if (selectedFactor == "医生数_") {
+                        maxValue = 85819;
+                    } else if (selectedFactor == "铁路旅") {
+                        maxValue = 28169;
+                    } else if (selectedFactor == "公路客") {
+                        maxValue = 195597;
+                    } else if (selectedFactor == "铁路货") {
+                        maxValue = 11979;
+                    } else if (selectedFactor == "公路货") {
+                        maxValue = 271483;
+                    } else if (selectedFactor == "社会消") {
+                        maxValue = 83751191;
+                    } else if (selectedFactor == "本地电") {
+                        maxValue = 869.24;
+                    } else if (selectedFactor == "建成区") {
+                        maxValue = 78;
+                    }
+                    renderer.setVisualVariables([
+          // (3.A) This visual variable determines the size of circle marker
+          // for each polygon based on the value of its attribute field.
+                        {
+                            type: "sizeInfo",
+                            field: rendererField,
+                            minDataValue: 0,
+                            //maxDataValue: 400,
+                            maxDataValue: maxValue,
+                            valueUnit: "unknown",
+
+                            // The SMALLEST marker size at any given map scale is determined by
+                            // minSize specification.
+
+                            minSize: {
+                                type: "sizeInfo",
+                                expression: "view.scale",
+                                stops: [
+                                    {
+                                        value: 1128,
+                                        size: 16
+                                    },
+                                    {
+                                        value: 144447,
+                                        size: 16
+                                    },
+                                    {
+                                        value: 18489298,
+                                        size: 4
+                                    },
+                                    {
+                                        value: 147914382,
+                                        size: 4
+                                    },
+                                    {
+                                        value: 591657528,
+                                        size: 2
+                                    }
+              ]
+                            },
+
+                            // The LARGEST marker size at any given map scale is determined by
+                            // maxSize specification.
+                            //size 改变点的大小
+                            maxSize: {
+                                type: "sizeInfo",
+                                expression: "view.scale",
+                                stops: [
+                                    {
+                                        value: 1128,
+                                        size: 40
+                                    },
+                                    {
+                                        value: 144447,
+                                        size: 40
+                                    },
+                                    {
+                                        value: 18489298,
+                                        size: 25
+                                    },
+                                    {
+                                        value: 147914382,
+                                        size: 25
+                                    },
+                                    {
+                                        value: 591657528,
+                                        size: 12
+                                    }
+              ]
+                            }
+          },
+
+          // (3.B) This visual variable determines the outline width of polygons
+          // based on map scale.
+                        {
+                            type: "sizeInfo",
+                            target: "outline",
+                            expression: "view.scale",
+                            stops: [
+                                {
+                                    value: 1153765,
+                                    size: 2
+                                },
+                                {
+                                    value: 7211032,
+                                    size: 1
+                                },
+                                {
+                                    value: 28844129,
+                                    size: 0
+                                }
+            ]
+          }
+        ]);
+                    anRenderer.setVisualVariables([
+          // (3.A) This visual variable determines the size of circle marker
+          // for each polygon based on the value of its attribute field.
+                        {
+                            type: "sizeInfo",
+                            field: rendererField,
+                            minDataValue: 0,
+                            //maxDataValue: 400,
+                            maxDataValue: maxValue,
+                            valueUnit: "unknown",
+
+                            // The SMALLEST marker size at any given map scale is determined by
+                            // minSize specification.
+
+                            minSize: {
+                                type: "sizeInfo",
+                                expression: "view.scale",
+                                stops: [
+                                    {
+                                        value: 1128,
+                                        size: 16
+                                    },
+                                    {
+                                        value: 144447,
+                                        size: 16
+                                    },
+                                    {
+                                        value: 18489298,
+                                        size: 4
+                                    },
+                                    {
+                                        value: 147914382,
+                                        size: 4
+                                    },
+                                    {
+                                        value: 591657528,
+                                        size: 2
+                                    }
+              ]
+                            },
+
+                            // The LARGEST marker size at any given map scale is determined by
+                            // maxSize specification.
+                            //size 改变点的大小
+                            maxSize: {
+                                type: "sizeInfo",
+                                expression: "view.scale",
+                                stops: [
+                                    {
+                                        value: 1128,
+                                        size: 40
+                                    },
+                                    {
+                                        value: 144447,
+                                        size: 40
+                                    },
+                                    {
+                                        value: 18489298,
+                                        size: 25
+                                    },
+                                    {
+                                        value: 147914382,
+                                        size: 25
+                                    },
+                                    {
+                                        value: 591657528,
+                                        size: 12
+                                    }
+              ]
+                            }
+          },
+
+          // (3.B) This visual variable determines the outline width of polygons
+          // based on map scale.
+                        {
+                            type: "sizeInfo",
+                            target: "outline",
+                            expression: "view.scale",
+                            stops: [
+                                {
+                                    value: 1153765,
+                                    size: 2
+                                },
+                                {
+                                    value: 7211032,
+                                    size: 1
+                                },
+                                {
+                                    value: 28844129,
+                                    size: 0
+                                }
+            ]
+          }
+        ]);
+
+                    //----------------------
+                    // Create feature layer
+                    //----------------------
+                    /* var legend = '';
+                    function Refresh(){
+		
+                    	if(layer!=''){
+                    		map.removeLayer(layer);
+                    	} */
+                    function getExpress(area) {
+                        var cityArr = getAreaCities(area);
+                        var expressStr = ' 年 = ' + year + ' and (';
+                        for (var i = 0; i < cityArr.length; i++) {
+                            if (i == cityArr.length - 1) {
+                                expressStr = expressStr + " 城市='" + cityArr[i] + "'";
+                                break;
+                            }
+                            expressStr = expressStr + " 城市='" + cityArr[i] + "' or ";
+                        }
+                        expressStr = expressStr + ")";
+                        return expressStr;
+                    }
+
+                    var express1 = getExpress(area1);
+                    var express2 = getExpress(area2);
+
+                    layer = new FeatureLayer(layerUrl, {
+                        opacity: 0.8,
+                        outFields: [rendererField, "FID", "城市", "年"],
+                        definitionExpression: express1,
+                        // 指标
+                        infoTemplate: new PopupTemplate({
+                            title: "{城市}",
+                            fieldInfos: [
+                                {
+                                    fieldName: rendererField,
+                                    label: " ",
+                                    visible: true,
+                                    format: {
+                                        places: 0
+                                    }
+              }
+            ]
+                        })
+                    });
+                    layer.setRenderer(renderer);
+
+
+                    anLayer = new FeatureLayer(layerUrl, {
+                        opacity: 0.8,
+                        outFields: [rendererField, "FID", "城市", "年"],
+                        definitionExpression: express2,
+                        // 指标
+                        infoTemplate: new PopupTemplate({
+                            title: "{城市}",
+                            fieldInfos: [
+                                {
+                                    fieldName: rendererField,
+                                    label: " ",
+                                    visible: true,
+                                    format: {
+                                        places: 0
+                                    }
+              }
+            ]
+                        })
+                    });
+                    anLayer.setRenderer(anRenderer);
+                    
+                    
+                    //----------------------
+                    // Create legend
+                    //----------------------
+
+                    if (legend == '') {
+
+                        legend = new Legend({
+                            map: map,
+                            layerInfos: [{
+                                layer: layer,
+                                title: elementLabel
+                            }]
+                        }, "legendDiv");
+                        legend.startup();
+                    } else {
+                        //legend.destroy();
+                        legend.layerInfos = [{
+                            layer: layer,
+                            title: elementLabel
+                        }];
+                        //                        legend.refresh();
+                    }
+                    map.addLayer(layer);
+                    map.addLayer(anLayer);
+                }
+                //on(dom.byId(button1),"click",Refresh(document.getElementById('yearControl').value));
+
+                var Ctrl = document.getElementById('yearControl');
+                //                Ctrl.addEventListener("change", function (evt) {
+                //                    document.getElementById('yearValue').innerHTML = evt.target.value;
+                //                    console.log(evt.target.value);
+                //                    Refresh(evt.target.value);
+                //                });
+
+                var count = 0;
+
+                function refreshMap() {
+                    Ctrl.value = count % 17 + 1997;
+                    Refresh(Ctrl.value);
+                    document.getElementById('yearValue').innerHTML = Ctrl.value;
+                    count = count + 1;
+                }
+                setInterval(refreshMap, 2000);
+            });
+
+        window.onload = function () {
+            //设置年份的选择 
+            var myDate = new Date();
+            var startYear = myDate.getFullYear() - 19; //起始年份 
+            var endYear = myDate.getFullYear(); //结束年份 
+            var obj = document.getElementById('myYear')
+            for (var i = startYear; i <= endYear; i++) {
+                obj.options.add(new Option(i, i));
+            }
+            obj.options[obj.options.length - 20].selected = 1;
+        }
+    </script>
+</head>
+
+<body>
+    <div id="mapDiv" style="position: relative; height: 100%;">
+        <div id="sidebar" class="sidebar">
+            <div style="font-weight: bold; padding: 3px;"></div>
+            <hr>
+            <div id="legendDiv"></div>
+        </div>
+        
+        <div id="checkbar" class="checkbar">
+            <div style="font-weight: bold">
+                <p style="color:#F5F5F5">年份：<span id="yearValue">1997</span></p>
+                <input id="yearControl" class="sliderbar" disabled="disabled" type="range" max=2013 min=1997 value=1997 step=1/>
+            </div>
+
+        </div>
+</body>
+
+</html>

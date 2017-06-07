@@ -1,0 +1,49 @@
+body{
+	background-image:url(../img/background.png);
+	background-repeat:no-repeat;
+	font-family:Microsoft YaHei;
+}
+option{
+	background-color:#919191;
+}
+.clear{
+	padding-top:150px;
+}
+.clear-sm{
+	padding-top:95px;
+}
+.clear-xs{
+	padding-top:10px;
+}
+.inputArea{
+	/* background-color:#000; */
+	background-image:url(../img/input_background.png);
+	background-repeat:no-repeat;
+	background-size:cover;
+	border-radius:10px;
+	width:600px;
+	height:300px;
+	color:#FFFFFF;
+}
+#area1{
+	background-color:transparent;
+	color:#FFFFFF;
+}
+#area2{
+	background-color:transparent;
+	color:#FFFFFF;
+}
+#element{
+	background-color:transparent;
+	color:#FFFFFF;
+}
+.ele-btn{
+	width:165px;
+}
+#form-title{
+	font-size:30px;
+	font-family:Microsoft YaHei;
+}
+.font-mid{
+	font-size:20px;
+}

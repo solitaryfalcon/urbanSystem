@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+	<head>
+		<title>data analyse</title>
+		<link href="css/select.css" rel="stylesheet" />
+		<link href="css/bootstrap.min.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="clear"></div>
+				<div class="col-sm-offset-3 col-sm-6 inputArea">
+					<div class="clear-xs"></div>
+					<div class="col-sm-offset-4 col-sm-4" id="form-title">指标对比</div>
+					<div class="clear-sm"></div>
+					<form class="form-horizontal" role="form" method="get">
+						<div class="form-group">
+							<label for="area" class="col-sm-3 control-label font-mid" id="label1">地区：</label>                        
+							<div class="col-sm-4">
+								<select type="text" class="form-control col-sm-4" id="area1" name="area1">
+									<option value="长三角">长三角</option>
+									<option value="京津冀">京津冀</option>
+									<option value="珠三角">珠三角</option>
+									<option value="辽中南">辽中南</option>
+								</select>
+							</div>
+							<div class="col-sm-4">
+								<select type="text" class="form-control col-sm-offset-1 col-sm-4" id="area2" name="area2">
+									<option value="珠三角">珠三角</option>
+									<option value="辽中南">辽中南</option>
+									<option value="长三角">长三角</option>
+									<option value="京津冀">京津冀</option>
+								<select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="element" class="col-sm-3 control-label font-mid">指标：</label>
+							<div class="col-sm-8">
+								<select type="text" class="form-control" id="element" name="element">
+									<option value="土地面">土地面积建成区</option>
+									<option value="第一产">第一产业比重</option>
+									<option value="第二产">第二产业比重</option>
+									<option value="第三产">第三产业比重</option>
+									<option value="人均地">人均地区生产总值</option>
+									<option value="地方财">地方财政收入</option>
+									<option value="城市建">城市建设用地面积</option>
+									<option value="居住用">居住用地面积</option>
+									<option value="工业企">工业企业数</option>
+									<option value="社会消">社会消费品零售总额</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-3 col-sm-3">
+								<br/>
+								<button type="button" class="btn btn-default ele-btn" onclick="graphEvent()">折线图</button>
+							</div>
+							<div class="col-sm-offset-1 col-sm-3">
+								<br/>
+								<button type="button" class="btn btn-default ele-btn" id="map" onclick="mapEvent()">地图</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<script src="js/select.js"></script>
+	</body>
+</html>

@@ -1,0 +1,65 @@
+body{
+	background-image:url(../img/background1.png);
+	background-repeat:no-repeat;
+	background-size:cover;
+}
+h4{
+	color:#FFF;
+}
+a{
+	color:#FFF;
+	font-size:20px;
+	cursor:pointer;
+}
+.pageTitle{
+	margin-top:15%;
+	color:#FFF;
+}
+#economy{
+	background:url(../img/economy.png) no-repeat;
+	width:70px;
+	height:70px;
+	border:2px solid #FFF;
+	border-radius: 65px;
+	cursor:pointer;
+}
+#environment{
+	background:url(../img/environment.png) no-repeat;
+	width:70px;
+	height:70px;
+	border:2px solid #FFF;
+	border-radius: 65px;
+	cursor:pointer;
+}
+#society{
+	background:url(../img/enviroment.png) no-repeat;
+	width:70px;
+	height:70px;
+	border:2px solid #FFF;
+	border-radius: 65px;
+	cursor:pointer;
+}
+#transports{
+	background:url(../img/enviroment.png) no-repeat;
+	width:70px;
+	height:70px;
+	border:2px solid #FFF;
+	border-radius: 65px;
+	cursor:pointer;
+}
+#equipment{
+	background:url(../img/enviroment.png) no-repeat;
+	width:70px;
+	height:70px;
+	border:2px solid #FFF;
+	border-radius: 65px;
+	cursor:pointer;
+}
+#examples{
+	background:url(../img/enviroment.png) no-repeat;
+	width:70px;
+	height:70px;
+	border:2px solid #FFF;
+	border-radius: 65px;
+	cursor:pointer;
+}

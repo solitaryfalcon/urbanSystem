@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Sign in</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="../Style/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../Style/Bootstrap/js/bootstrap.min.js"></script>
+
+    <style>
+      body {
+        background-image: url(../Style/img/background.png);
+        background-repeat:no-repeat;
+        background-attachment:fixed;
+        background-position:center;
+        overflow: hidden;
+      }
+      #loginForm {
+        margin: 30%;
+        margin-top: 18%;
+        color:white;
+      }
+      legend {
+        color:white;
+      }
+      .btn-default {
+        margin: 8%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form class="form-horizontal" role="form" id="loginForm">
+        <fieldset>
+          <legend>智能中枢</legend>
+        </fieldset>
+        <div class="form-group">
+          <label for="InputUsername">用户名</label>
+          <input type="text" class="form-control" id="InputUsername" placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+          <label for="InputPassword1">密码</label>
+          <input type="password" class="form-control" id="InputPassword1" placeholder="请输入密码">
+        </div>
+        <div class="row text-center form-group">
+          <button type="button" class="btn btn-default" id="btn">登录</button>
+          <button type="button" class="btn btn-default">随便看看</button>
+        </div>
+        <div class="row text-right form-group">
+          <a href="signup.html">注册</a>
+          <a href="findPW.html">忘记密码？</a>
+        </div>
+      </form>
+    </div>
+
+    <script type="text/javascript">
+      $("#btn").click(function(event) {
+        self.location='main.html';
+      });
+    </script>
+
+  </body>
+</html>

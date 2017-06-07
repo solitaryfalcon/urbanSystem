@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>智城中枢</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Load Leaflet from CDN-->
+  <link rel="stylesheet" href="Style/CSS/leaflet.css" />
+  <script src="js/leaflet-src.js"></script>
+
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="js/esri-leaflet.js"></script>
+
+  <!-- Bootstrap -->
+  <link href="Style/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="js/jquery1.11.1.min.js"></script>
+
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="Style/Bootstrap/js/bootstrap.min.js"></script>
+
+  <!-- datetime picker -->
+  <link rel="stylesheet" href="Style/Bootstrap/css/bootstrap-datetimepicker.min.css">
+  <script src="js/bootstrap-datetimepicker.js"></script>
+
+  <!-- Leaflet Editable -->
+  <script src="js/Leaflet.Editable.js"></script>
+
+  <!-- semantic -->
+  <link rel="stylesheet" type="text/css" href="Style/CSS/semantic.min.css">
+  <script src="js/semantic.min.js"></script>
+
+  <!-- Bootstrap Treeview -->
+  <script src="js/bootstrap-treeview.js"></script>
+
+  <!-- Font-Awesome -->
+  <link href="http://cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- buttons-->
+  <link rel="stylesheet" href="Style/CSS/buttons.css">
+
+  <!-- leaflet ChineseTmsProviders -->
+  <script type="text/javascript" src="js/leaflet.ChineseTmsProviders.js"></script>
+
+  <!-- leaflet Path.drag -->
+  <script type="text/javascript" src="js/Path.Drag.js"></script>
+
+  <!-- leaflet Measure Path -->
+  <script type="text/javascript" src="js/leaflet-measure-path.js"></script>
+  <link rel="stylesheet" href="Style/CSS/leaflet-measure-path.css">
+
+  <!-- vis timeline -->
+  <link rel="stylesheet" href="Style/CSS/vis-timeline-graph2d.min.css">
+  <script src="js/vis.js"></script>
+  <!--<script src="../JS/googleAnalytics.js"></script>-->
+
+  <!-- Esri Leaflet Geocoder -->
+<!--  <link rel="stylesheet" href="Style/CSS/esri-leaflet-geocoder2.2.3.css">
+  <script src="js/esri-leaflet-geocoder@2.2.3.js"></script> -->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.2/dist/esri-leaflet-geocoder.css">
+  <script src="https://unpkg.com/esri-leaflet-geocoder@2.2.2"></script>
+
+  <!-- Leaflet zoomhome -->
+  <link rel="stylesheet" href="Style/CSS/leaflet.zoomhome.css"/>
+  <script src="js/leaflet.zoomhome.min.js"></script>
+
+
+  <!-- Load D3 -->
+  <script src="js/d3.min.js"></script>
+  <script src="js/d3-scale-chromatic.v1.min.js"></script>
+  
+  <!-- Load EChart -->
+  <script src="../JS/echarts.common.min.js"></script>
+
+  <!-- Load timelinr -->
+  <script type="text/javascript" src="../JS/jquery.timelinr-0.9.53.js"></script>
+  
+  <script src="../JS/heatmap.js" charset="utf-8"></script>
+  <script src="../JS/leaflet-heatmap.js" charset="utf-8"></script>
+  <script src="../JS/OSMBuildings-Leaflet.js" charset="utf-8"></script>
+  
+  <script src="../JS/jquery-ui.js"></script>
+  <link rel="stylesheet" href="../Style/CSS/jquery-ui.css">
+
+
+  <link rel="stylesheet" href="../Style/CSS/OSMBuildings.css">
+
+
+
+  <link rel="stylesheet" href="../Style/CSS/map.css">
+  <style type="text/css">
+    #timeline {overflow: hidden;position: relative;background: url('../Style/img/dot1.png') left 45px repeat-x;}
+    #dates {width: 760px;height: 60px;overflow: hidden;}
+    #dates li {list-style: none;float: left;width: 120px;height: 50px;font-size: 24px;text-align: center;background: url('../Style/img/selectedbiggerdot.png') center bottom no-repeat;}
+    #dates a {line-height: 38px;padding-bottom: 1px;font-size: 13px; color: #FFFF00; font-weight: 900}
+    #dates .selected {font-size: 17px; color: #6DFFFF;}
+  </style>
+
+</head>
+<body>
+<div id="container">
+  <div id="loginMes">
+    <% if(locals.islogin) { %>
+    会员：<%= user %>&nbsp;&nbsp 已经登录;
+    <a class="btn" href="/logout">退出</a>
+    <% } else{ %><a href="/login">登录</a><% } %>
+  </div>
+
+  <div class="ui active dimmer" style="display: none;">
+    <div class="ui text loader">Loading</div>
+  </div>
+
+  <!--<div id="data-type-name" style="margin: 20% 30%; height: 30%; width: 30%; background-color: #2f2f2f; opacity: 0.6;">-->
+    <!--<p style="height:inherit; margin:auto; color: white; line-height: 30%; size: 100px";>经济</p>-->
+  <!--</div>-->
+
+  <div id="map">
+  </div>
+  <div style="height: 100%; left: 0px; position: absolute; z-index: 1000;" id="left_area">
+    <div style="height: 100%; width: 220px; float: left;" id="search_field">
+      <div class="ui input action" style="width: 100%; border: 0px; margin: 0px; padding: 0px" >
+        <div style="float: left;"><input type="input" class="input-sm form-control" id="input-search" value="" style="width:190px; float: left"></div>
+	<div style="float: left;"><img src="../Style/img/search.png" style="margin:auto;top:0;bottom:0;right:0;position: absolute;float: left" id="searchIcon"></div>	
+      </div>
+      <div style="height: 95%;background-color: #0f0f0f; opacity: 0.8; margin: 0px; padding: 0px; boder: 0px">
+        <div id="tree-view" class="" style="height: 100%; overflow: auto;"></div>
+      </div>
+    </div>
+    <div style="height: 100%; background-color: black; width: 20px; float: left;" id="slide_button">
+        <img src="../Style/img/left.png" style="margin:auto;top:0;bottom:0;right:0;position: absolute;clear: left" id="direction">
+    </div>
+  </div>
+  <div id="download-button-div" style="text-align: center; display: none; margin-bottom: 5%"><a id="annalDataDownloadUrl" target="_self"><button type="button" class="btn btn-lg" >下载</button></a></div>
+  <div  id="data-sample" style="display: none;">
+    <!--<button class="btn btn-sm" style="background: white;float: right; margin-bottom: 3%"><img src="../Style/img/close.png"></button>-->
+    <div id="close-table" style="float: right; margin-bottom: 3%"><img src="../Style/img/close.png"></div>
+    <div id="table-area"><table id="data-sample-table"></table></div>
+  </div>
+
+  <div id="theme">
+    <h1 id="themeName" style="font-size:150px; opacity: 0.7; color: white;"></h1>
+    <!--<table id="data-sample-table"></table>-->
+    <!--经&nbsp&nbsp&nbsp济-->
+  </div>
+
+  <div  id="data-chart" style="display: none;">
+    <!--<button class="btn btn-sm" style="background: white;float: right; margin-bottom: 3%"><img src="../Style/img/close.png"></button>-->
+    <div id="close-chart" style="float: right; margin-top: 3%"><img src="../Style/img/close.png"></div>
+    <div id="chart" ></div>
+  </div>
+
+  <div id="right_area" style="right: 5px; top: 5%">
+    <div id="home" style="background-color: #0f0f0f; text-align:center; margin-top: 4%; width: 140px; height: 40px; color: white; line-height: 40px; font-size: 18px;" >Home</div>
+
+    <div id="data-explore-button" style="background-color: #0f0f0f; text-align:center; margin-top: 4%; width: 140px; height: 40px; color: white; line-height: 40px; font-size: 18px; border-bottom-color: white; border-bottom-width: 3px; border-bottom-style: solid">数据探索</div>
+    <div class="container-fluid" style="background-color: #0f0f0f; width: 130px; padding: 5%; display: none; opacity: 0.8" id="data-explore">
+      <form role="form" id="data-explore-form">
+        <div class="form-group " style="margin-bottom: 3%">
+          <label for="InputStartTime" style="color: white; font-size: 12px">起始时间</label>
+          <input type="text" style="height: 30px;background-color: #0f0f0f; color: white"id="InputStartTime" class="form-control" readonly>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 3%">
+          <label for="InputEndTime" style="color: white; font-size: 12px">结束时间</label>
+          <input type="text" style="height: 30px;background-color: #0f0f0f; color: white" class="form-control" id="InputEndTime" readonly>
+        </div>
+        <!--<div class="form-group" style="margin-bottom: 3%">-->
+          <!--<label for="interval" style="color: white; font-size: 12px">间隔时间</label>-->
+          <!--<select class="form-control" style="height: 20px; background-color: #0f0f0f; color: white" id="interval">-->
+            <!--<option>1</option>-->
+            <!--<option>2</option>-->
+            <!--<option>3</option>-->
+            <!--<option>4</option>-->
+            <!--<option>5</option>-->
+          <!--</select>-->
+        <!--</div>-->
+        <!--<div class="form-group" style="margin-bottom: 3%">-->
+          <!--<label for="location" style="color: white; font-size: 12px">地图中心</label>-->
+          <!--<select class="form-control" style="height: 20px;background-color: #0f0f0f; color: white" id="location">-->
+            <!--<option>1</option>-->
+            <!--<option>2</option>-->
+            <!--<option>3</option>-->
+            <!--<option>4</option>-->
+            <!--<option>5</option>-->
+          <!--</select>-->
+        <!--</div>-->
+        <div class="form-group" style="margin-bottom: 3%">
+          <label for="indicators" style="color: white; font-size: 12px">显示属性</label>
+          <select class="form-control" style="height: 30px;background-color: #0f0f0f; color: white" id="indicators"></select>
+        </div>
+        <div class="text-center form-group " id="buttonGroup" style="margin-top: 10%">
+          <button type="button" id="submit" class="btn btn-sm" style="background-color: #3affff; border:0px;color: white; width: 50px; height: 25px; margin-right: 6%">
+            <span class="glyphicon glyphicon-search"></span>提交
+          </button>
+          <button type="reset" class="btn btn-sm" style="background-color: #999999; border: 0; color: white;  width: 50px; height: 25px;">
+            <span class="glyphicon glyphicon-refresh"></span>重置
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div id="data-analyze-button" style="background-color: #0f0f0f; text-align:center; margin-top: 4%; width: 140px; height: 40px; color: white; line-height: 40px; font-size: 18px;  border-bottom-color: white; border-bottom-width: 3px; border-bottom-style: solid; display:none" class="dropdown">数据分析</div>
+    <div class="container-fluid" style="float: left; width: 140px; padding: 0px; display: none; opacity: 0.8" id="data-analyze">
+      <div class="item button" id="grid-heat" style="background-color: #202020; width: inherit; border-width: 4px; border-color: #0f0f0f; border-style: solid; color: white; font-size:15px; padding: 0px; height: inherit">栅格热力图</div>
+      <div class="item button" id="grid-cube" style="background-color: #202020; width: inherit; border-right-width: 4px; border-left-width: 4px; border-top-width: 0px; border-bottom-width: 0px; border-color: #0f0f0f; border-style: solid; color: white; padding: 0px; font-size: 15px">栅格立方图</div>
+      <div class="item button" id="block-heat" style="background-color: #202020; width: inherit; border-right-width: 4px; border-left-width: 4px; border-top-width: 4px; border-bottom-width: 0px; border-color: #0f0f0f; border-style: solid; color: white; padding: 0px; font-size: 15px">街区热力图</div>
+      <div class="item button" id="block-OD-throughput" style="background-color: #202020; width: inherit; border-width: 4px; border-color: #0f0f0f; border-style: solid; color: white; padding: 0px; font-size: 15px; height: inherit">街区OD与吞吐量</div>
+      <div id="selector-for-od" style="display: none;">
+        <label for="spinner" style="color: white;float: left;">最小OD值：</label>
+        <input id="spinner" style="width: 20px;float: left;" name="value">
+      </div>    
+	</div>
+    <div id="density-analysis" class="container-fluid" style="background-color: #0f0f0f; width: 140px;padding: 6%; display: none; opacity: 0.8">
+      <div id="desity-analysis-menu" style="color: white; margin: 4%">
+        <img src="../Style/img/return.png" style="left: 0px;padding-right: 30%" id="exit-desity-analysis">
+        密度分析
+      </div>
+      <form role="form">
+        <div class="form-group" style="margin-bottom: 3%" >
+          <label for="select-layer" style="color: white;font-size: 12px">输入图层</label>
+          <select class="form-control" style="height: 20px; background-color: #0f0f0f; color: white" id="select-layer">
+            <option>1</option>
+            <option>2</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 3%">
+          <label for="select-field" style="color: white;font-size: 12px ">输入字段</label>
+          <select class="form-control" style="height: 20px;background-color: #0f0f0f; color: white" id="select-field">
+          <option>1</option>
+          <option>2</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 3%">
+          <label for="select-radius" style="color: white;font-size: 12px">搜索半径</label>
+          <select class="form-control" style="height: 20px;background-color: #0f0f0f; color: white"id="select-radius">
+          <option>1</option>
+          <option>2</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 3%">
+          <label for="select-unit" style="color: white;font-size: 12px">输出单位</label>
+          <select class="form-control" style="height: 20px;background-color: #0f0f0f; color: white"id="select-unit">
+            <option>1</option>
+            <option>2</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 3%">
+          <label for="select-cell-size" style="color: white;font-size: 12px">输出单元格大小</label>
+          <select class="form-control" style="height: 20px;background-color: #0f0f0f; color: white"id="select-cell-size">
+            <option>1</option>
+            <option>2</option>
+          </select>
+        </div>
+        <div class="text-center form-group " id="button_Group" style="margin-top: 10%">
+          <button type="submit" id="submit1" class="btn btn-sm" style="background-color: #3affff; border:0px;color: white; width: 50px; height: 25px; margin-right: 6%">
+            <span class="glyphicon glyphicon-search"></span>提交
+          </button>
+          <button type="reset" class="btn btn-sm" style="background-color: #999999; border: 0; color: white;  width: 50px; height: 25px;">
+            <span class="glyphicon glyphicon-refresh"></span>重置
+          </button>
+        </div>
+      </form>
+    </div>
+    <div id="table-data-button" style="display:none; background-color: #0f0f0f; text-align:center; margin-top: 4%; width: 140px; height: 40px; color: white; line-height: 40px; font-size: 18px;  border-bottom-color: white; border-bottom-width: 3px; border-bottom-style: solid" class="dropdown">表格数据</div>
+  </div>
+
+  <!-- bottom -->
+  <!--<div id='visualization' style="position: absolute; z-index: 1000; align-content: center; width: 55%; margin-left: 20%; bottom: 10%; background-color: black; opacity: 0.7;">-->
+
+  <!--</div>-->
+  <div id='timeline-area' style="display:none;bottom:20%;float: left;position: absolute; z-index: 5000; align-content: center; width: 55%; margin-left: 25%; margin-top: 33%; background-color: transparent; opacity: 0.7;height:0px">
+    <div id="prev" style="float: left;position: absolute; z-index: 5000;margin: 30px auto;left:-30px"><img src="../Style/img/prev1.png" width="20" height="32"></div>
+
+    <div id="timeline" style="height：50px">
+      <ul id="dates">
+        <!--<li><a href="#">date1</a></li>-->
+        <!--<li><a href="#">date2</a></li>-->
+        <!--<li><a href="#">date3</a></li>-->
+      </ul>
+      <ul id="issues">
+        <!--<li id="date1">-->
+        <!--</li>-->
+        <!--<li id="date2">-->
+        <!--</li>-->
+        <!--<li id="date3">-->
+        <!--</li>-->
+      </ul>
+      <!--</div>-->
+    </div>
+    <div id="next" style="position: absolute; z-index: 5000;bottom:-61px;right:-20px;width: 10px"><img src="../Style/img/next1.png" width="20" height="32"></div>
+	<div id="Timeline-Label" style="position: absolute; z-index: 5000;bottom:-61px;right:-45px;width: 10px;color: whitesmoke;">时间</div>
+  </div>
+
+  <!--<div id="legend-div" style="position: absolute; z-index: 1000; height: 6%; width: 50%; margin-left: 22%; bottom: 2%; opacity: 0.9;">-->
+    <!--<svg id="legend" style="height: 60%;width: 100%;">-->
+      <svg id="legend" style="height: 10%;width: 100%;display: block;position: absolute; z-index: 1000; bottom: 2%;">
+      <!--margin: 5px 5% auto 3%-->
+      <!--<rect x="5%" width="19%" height="50%" style="fill: rgb(239,243,255);"></rect>-->
+      <!--&lt;!&ndash;<text x="5.5%" y="65%" style="font-size: 10px">4200</text>&ndash;&gt;-->
+      <!--<rect x="24%" width="19%" height="50%" style="fill: rgb(189,215,231);"></rect>-->
+      <!--&lt;!&ndash;<text x="24.5%" y="65%" font-size="10">531860</text>&ndash;&gt;-->
+      <!--<rect x="43%" width="19%" height="50%" style="fill: rgb(107,174,214);"></rect>-->
+      <!--&lt;!&ndash;<text x="43.5%" y="65%" font-size="10">1059520</text>&ndash;&gt;-->
+      <!--<rect x="62%" width="19%" height="50%" style="fill: rgb(49,130,189);"></rect>-->
+      <!--&lt;!&ndash;<text x="62.5%" y="65%" font-size="10">1587180</text>&ndash;&gt;-->
+      <!--<rect x="81%" width="19%" height="50%" style="fill: rgb(8,81,156);"></rect>-->
+      <!--<text x="81.5%" y="65%" font-size="10">2114840</text>-->
+    </svg>
+  </div>
+
+  <!--<div id="tooltip" class="tip" style="display: none;z-index: 2000; color: white"></div>-->
+
+</div>
+<script src="js/map_operation.js"></script>
+<script src="js/map.js"></script>
+<script src="../JS/osmb.min.js" charset="utf-8"></script>
+<script src="../JS/block.min.js" charset="utf-8"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Sign Up</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="../Style/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      background-color: #eee;
+    }
+
+    .form-signin {
+      max-width: 330px;
+      padding: 15px;
+      margin: 0 auto;
+    }
+    .form-signin .form-signin-heading,
+    .form-signin .checkbox {
+      margin-bottom: 10px;
+    }
+    .form-signin .checkbox {
+      font-weight: normal;
+    }
+    .form-signin .form-control {
+      position: relative;
+      height: auto;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 10px;
+      font-size: 16px;
+    }
+    .form-signin .form-control:focus {
+      z-index: 2;
+    }
+    .form-signin input[type="email"] {
+      margin-bottom: -1px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    .form-signin input[type="password"] {
+      margin-bottom: 10px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <form class="form-signin form-horizontal" role="form">
+      <div class="form-group">
+        <label for="InputUsername" class="control-label">用户名</label>
+        <input type="text" class="form-control" id="InputUsername" placeholder="请输入用户名">
+      </div>
+      <div class="form-group">
+        <label for="InputPassword">密码</label>
+        <input type="password" class="form-control" id="InputPassword" placeholder="请输入密码">
+      </div>
+      <div class="form-group">
+        <label for="InputRealName">真实姓名</label>
+        <input type="text" class="form-control" id="InputRealName" placeholder="请输入真实姓名">
+      </div>
+      <div class="form-group">
+        <label for="InputEmail">邮箱</label>
+        <input type="email" class="form-control" id="InputEmail" placeholder="请输入邮箱">
+      </div>
+      <div class="form-group">
+        <label for="InputPhone">手机号</label>
+        <input type="number" class="form-control" id="InputPhone" placeholder="请输入手机号">
+      </div>
+      <div class="row text-center form-group" style="margin-top: 15%">
+        <button class="btn btn-lg btn-primary" type="submit" style="width: 30%">注册</button>
+        <a href="index.html" style="margin-left: 20%" >放弃</a>
+      </div>
+      <div class="row text-center form-group">
+        <p>By signing up, you agree to our <a href="#">Terms of service</a></p>
+      </div>
+
+    </form>
+
+  </div>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="../Style/Bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Smart City</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="../Style/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="../Style/Bootstrap/css/buttons.css" rel="stylesheet">
+  <link href="../Style/CSS/gointo.css" rel="stylesheet">
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="../Style/Bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+		<div class="col-sm-offset-9 col-sm-3 white" style="color:#FFF">
+				<% if(locals.islogin) { %>
+				会员：<%= user %>&nbsp;&nbsp已经登录;
+				<a class="btn" href="/logout" style="font-size:15px">退出</a>
+				<% } else{ %><a href="/login" style="font-size:15px">登录</a><% } %>
+				<a href="/home" style="font-size:15px">操作台</a>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+	<div class="row">
+	  <div class="col-sm-4">
+		<h1 class="pageTitle">智能中枢</h1>
+		<h4>Zhi Cheng Zhong Shu</h4>
+		<hr/>
+		<div class="button-group col-sm-offset-1" id="btn-group">
+		  <button id="economy">
+			<img src="/Style/img/economy.png" style="width:40px;height:40px"/>
+		  </button>&nbsp;<a href="/map?id=3">经济</a><br><br>
+		  <button id="environment">
+			<img src="/Style/img/environment.png" style="width:55px;height:55px"/>
+		  </button>&nbsp;<a href="/map?id=1">环境</a><br><br>
+		  <button id="society">
+			<img src="/Style/img/society.png" style="width:40px;height:40px"/>
+		  </button>&nbsp;<a href="/map?id=4">社会</a><br><br>
+		  <button id="transports">
+			<img src="/Style/img/transport.png" style="width:50px;height:45px"/>
+		  </button>&nbsp;<a href="/map?id=2">交通</a><br><br>
+		  <button id="equipment">
+			<img src="/Style/img/equipment.png" style="width:55px;height:55px"/>
+		  </button>&nbsp;<a href="/map?id=0">基础设施</a><br><br>
+		  <button id="examples">
+			<img src="/Style/img/example.png" style="width:40px;height:40px"/>
+		  </button>&nbsp;<a href="/MapStory/MapList.html">案例</a>
+		</div>
+	  </div>
+	 </div>
+	</div>
+
+  <script type="text/javascript">
+  
+	var EventUtil = {
+		addHandler: function (element, type, handler) {
+			if (element.addEventListener) {
+				element.addEventListener(type, handler, false);
+			} else if (element.attachEvent) {
+				element.attachEvent("on" + type, handler);
+			} else {
+				element["on" + type] = handler;
+			}
+		},
+		removeHandler: function (element, type, handler) {
+			if (element.removeEventListener) {
+				element.removeEventListener(type, handler, false);
+			} else if (element.detachEvent) {
+				element.detachEvent("on" + type, handler);
+			} else {
+				element["on" + type] = null;
+			}
+		},
+
+		getEvent: function (event) {
+			return event ? event : window.event;
+		},
+		getTarget: function (event) {
+			return event.target || event.srcElement;
+		},
+		preventDefault: function (event) {
+			if (event.preventDefault) {
+				event.preventDefault();
+			} else {
+				event.returnValue = false;
+			}
+		},
+		stopPropagation: function (event) {
+			if (event.stopPropagation) {
+				event.stopPropagation();
+			} else {
+				event.cancelBubbles = true;
+			}
+		},
+		getRelatedTarget: function (event) {
+			if (event.relatedTarger) {
+				return event.relatedTarget;
+			} else if (event.toElement) {
+				return event.toElement;
+			} else if (event.fromElement) {
+				return event.fromElement;
+			} else { return null; }
+
+		}
+	}
+	
+	var list = document.getElementById("btn-group");
+	EventUtil.addHandler(list,"click",function(event){
+		event = EventUtil.getEvent(event);
+		var target = EventUtil.getTarget(event).parentNode;
+		console.log(target);
+		switch(target.id){
+			case "economy":
+				console.log("economy");
+				self.location='map?id=3';
+				break;
+			case "environment":
+				self.location='map?id=1';
+				break;
+			case "society":
+				self.location='map?id=4';
+				break;
+			case "transports":
+				self.location='map?id=2';
+				break;
+			case "equipment":
+				self.location='map?id=0';
+				break;
+			case "examples":
+				self.location='/MapStory/MapList.html';
+				break;
+		}
+	});
+	
+	
+    /* $("#economy").click(function(event) {
+      self.location='map?id=1';
+    });
+	 $("#environment").click(function(event) {
+      self.location='map?id=2';
+    });
+	$("#society").click(function(event) {
+      self.location='map?id=3';
+    });
+	$("#transports").click(function(event) {
+      self.location='map?id=4';
+    });
+	$("#equipment").click(function(event) {
+      self.location='map?id=5';
+    });
+	$("#examples").click(function(event) {
+      self.location='/MapStory/MapList.html';
+    });*/
+  </script>
+
+
+</body>
+</html>

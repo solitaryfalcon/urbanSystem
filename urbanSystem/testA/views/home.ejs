@@ -1,0 +1,288 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<!-- <meta charset="gb2312" /> -->
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="css/font-awesome.min.css" rel="stylesheet">
+		<link href="css/bootstrap-social.css" rel="stylesheet">
+		<link href="css/mystyles.css" rel="stylesheet">
+		<link href="css/bootstrap-treeview.css" rel="stylesheet" />
+		<title>Database details</title>
+		<script src="build/source/echarts.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<header>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="logo col-sm-3">
+						<a href="/adminHome"><img src="img/logo.png"/></a>
+					</div>
+					<div class="col-sm-6 h-nav">
+						<ul>
+							<li role="presentation" class="active">
+								<a href="#serverStatus" aria-controls="serverStatus" role="tab" data-toggle="tab">
+								服务器状态</a>
+							</li>
+							<li role="presentation">
+								<a href="#dataStatus" aria-controls="dataStatus" role="tab" data-toggle="tab">
+								数据状态</a>
+							</li>
+							<li role="presentation">
+								<a href="#spider" aria-controls="spider" role="tab" data-toggle="tab">
+								实时数据状态</a>
+							</li>
+						</ul>
+					</div>
+					<div class="col-sm-3 smallFont">
+						<% if(locals.islogin) { %>
+						管理员：<%= user %>已经登录;
+						<a class="btn" href="/logout">退出</a>
+						<% } else{ %><a href="/login">登录</a><% } %>
+					</div>
+				</div>
+			</div>
+		</header>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12 col-sm-10">
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane fade in active" id="serverStatus">
+							<div id="server_status" class="col-sm-9">
+							</div>
+							<div class="col-sm-2">
+								<br/><br/><br/>
+								<p>服务器CPU占用：<strong id="cpu"></strong></p>
+								<p>缓冲区：<strong id="buff"></strong></p>
+								<p>运行队列：<strong id="runQueue"></strong></p>
+								<p>发送块设备：<strong id="blockOut"></strong></p>
+								<p>接收块设备：<strong id="blockIn"></strong></p>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane fade" id="dataStatus">
+							<div class="col-sm-3 sideBar">
+							<div class="clear"></div>
+								<ul class="nav vertical-tab">
+									<li role="presentation" class="active">
+										<a href="#dataAll" aria-controls="dataAll" role="tab" data-toggle="tab">
+										数据概览</a>
+									</li>
+									<li role="presentation">
+										<a href="#databaseTree" aria-controls="databaseTree" role="tab" data-toggle="tab" id="showData">
+										数据结构&nbsp;<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></a>
+									</li>
+								</ul>
+								<div class="dark" id="tree"></div>
+							</div>
+							<div class="col-sm-9">
+								<div class="tab-content">
+									<!-- 数据库总量折线图 -->
+									<div role="tabpanel" class="tab-pane fade in active" id="dataAll">
+										<div class="clear"></div>
+										<p class="col-sm-offset-2 col-sm-7">数据总条数：<strong id="dataTotal"></strong></p>
+										<p class="col-sm-3">数据总量：<strong id="dataZL">24</strong>TB</p>
+										<p class="col-sm-offset-9 col-sm-3">数据总类别：<strong id="dataType">1024</strong></p>
+										
+										<div id="databaseSum" class="col-sm-offset-1">
+										</div>
+									</div>
+									<!-- 数据库文件树 -->
+									<div role="tabpanel" class="tab-pane fade" id="databaseTree">
+										<div class="clear"></div>
+										<div class="clear"></div>
+										<div class="clear"></div>
+										<div class="clear"></div>
+										<!-- <div class="col-xs-12 col-sm-4" id="tree"></div> -->
+										<div class="col-sm-offset-2 col-sm-8" id="treeContent">
+											<p><strong id="title"></strong></p>
+											<br/>
+											<p>数据总条数：<strong id="data1">100000</strong></p>
+											<!-- <p>数据时间范围：<strong id="time1">2015/04/01</strong>--<strong id="time2">2015/04/30</strong></p>
+											<p>数据空间范围：<strong id="data2">上海市全市</strong></p> -->
+											<p>可显式尺度：<strong id="data3">14-18</strong></p> 
+											<!-- <button class="btn btn-xs btn-primary" onclick="changeTableStyle()">Style</button> -->
+											
+										<div class="tableDiv">
+											<table class="mytable" id="treeDataInsert">
+												
+											</table>
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- 爬虫状态 -->
+						<div role="tabpanel" class="tab-pane fade" id="spider">
+							<ul class="nav vertical-tab col-sm-3 sideBar">
+							<div class="clear"></div>
+								<li role="presentation" class="active">
+									<a href="#waterSpider" aria-controls="waterSpider" role="tab" data-toggle="tab">
+									水质状态数据</a>
+								</li>
+								<li role="presentation">
+									<a href="#enterpriseSpider" aria-controls="enterpriseSpider" role="tab" data-toggle="tab">
+									企业注册信息数据</a>
+								</li>
+								<li role="presentation">
+									<a href="#pmSpider" aria-controls="pmSpider" role="tab" data-toggle="tab">
+									PM2.5数据</a>
+								</li>
+								<li role="presentation">
+									<a href="#restaurantSpider" aria-controls="restaurantSpider" role="tab" data-toggle="tab">
+									餐馆信息数据</a>
+								</li>
+								<li role="presentation">
+									<a href="#activitySpider" aria-controls="activitySpider" role="tab" data-toggle="tab">
+									上海市同城活动数据</a>
+								</li>
+								<li role="presentation">
+									<a href="#houseSpider" aria-controls="houseSpider" role="tab" data-toggle="tab">
+									上海市房产交易数据</a>
+								</li>
+							</ul>
+							<div class="col-sm-9">
+								<div class="clear"></div>
+								<div class="clear"></div>
+								<div class="tab-content">
+									<!-- 水质状态爬虫 -->
+									<div role="tabpanel" class="tab-pane fade in active" id="waterSpider">
+										<div class="col-sm-offset-1 col-sm-5">
+											<table class="spiderMytable" id="waterData">
+												
+											</table>
+										</div>
+										<div class="col-sm-offset-2 col-sm-4 spiderBorder">
+											<p>主站URL: http://www.envicloud.cn/</p>
+											<p>更新频率：一周</p>
+											<p>最近一次数据获取时间：<p id="waterLastTime">2016/10/27 19:00:00</p></p>
+											<p></p>
+										</div>
+										<div class="col-sm-12" id="waterEcharts">
+										<hr/>
+											echarts
+										</div>
+									</div>
+									<!-- 企业注册信息爬虫 -->
+									<div role="tabpanel" class="tab-pane fade" id="enterpriseSpider">
+										<div class="col-sm-offset-1 col-sm-5">
+											<table class="spiderMytable" id="enterpriseData">
+												
+											</table>
+										</div>
+										<div class="col-sm-offset-2 col-sm-4 spiderBorder">
+											<p>主站URL: http://www.envicloud.cn/</p>
+											<p>更新频率：一周</p>
+											<p>最近一次数据获取时间：<p id="enterpriseLastTime">2016/10/27 19:00:00</p></p>
+											<p></p>
+										</div>
+										<div class="col-sm-12" id="enterpriseEcharts">
+										<hr/>
+											echarts
+										</div>
+									</div>
+									<!-- pm2.5数据 -->
+									<div role="tabpanel" class="tab-pane fade" id="pmSpider">
+										<div class="col-sm-offset-1 col-sm-5">
+											<table class="spiderMytable" id="pmData">
+												
+											</table>
+										</div>
+										<div class="col-sm-offset-2 col-sm-4 spiderBorder">
+											<p>主站URL: http://www.envicloud.cn/</p>
+											<p>更新频率：一小时</p>
+											<p>最近一次数据获取时间：<p id="pmLastTime">2016/10/27 19:00:00</p></p>
+											<p></p>
+										</div>
+										
+										<div class="col-sm-12" id="pm">
+										<hr/>
+											echarts
+										</div>
+									</div>
+									<!--餐馆信息爬虫-->
+									<div role="tabpanel" class="tab-pane fade" id="restaurantSpider">
+										<div class="col-sm-offset-1 col-sm-5">
+											<table class="spiderMytable" id="restaurantData">
+												
+											</table>
+										</div>
+										<div class="col-sm-offset-2 col-sm-4 spiderBorder">
+											<p>主站URL: http://www.envicloud.cn/</p>
+											<p>更新频率：一小时</p>
+											<p>最近一次数据获取时间：<p id="restaurantLastTime">2016/10/27 19:00:00</p></p>
+											<p></p>
+										</div>
+										
+										<div class="col-sm-12" id="restaurant">
+										<hr/>
+											echarts
+										</div>
+									</div>
+									<!--上海同城活动爬虫-->
+									<div role="tabpanel" class="tab-pane fade" id="activitySpider">
+										<div class="col-sm-offset-1 col-sm-5">
+											<table class="spiderMytable" id="activityData">
+												
+											</table>
+										</div>
+										<div class="col-sm-offset-2 col-sm-4 spiderBorder">
+											<p>主站URL: http://www.envicloud.cn/</p>
+											<p>更新频率：一小时</p>
+											<p>最近一次数据获取时间：<p id="activityLastTime">2016/10/27 19:00:00</p></p>
+											<p></p>
+										</div>
+										
+										<div class="col-sm-12" id="activity">
+										<hr/>
+											echarts
+										</div>
+									</div>
+									<!--上海市房产交易爬虫-->
+									<div role="tabpanel" class="tab-pane fade" id="houseSpider">
+										<div class="col-sm-offset-1 col-sm-5">
+											<table class="spiderMytable" id="houseData">
+												
+											</table>
+										</div>
+										<div class="col-sm-offset-2 col-sm-4 spiderBorder">
+											<p>主站URL: http://www.envicloud.cn/</p>
+											<p>更新频率：一小时</p>
+											<p>最近一次数据获取时间：<p id="houseLastTime">2016/10/27 19:00:00</p></p>
+											<p></p>
+										</div>
+										
+										<div class="col-sm-12" id="house">
+										<hr/>
+											echarts
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/databaseSum.js"></script>
+		<script src="js/waterEcharts.js"></script>
+		<script src="js/pmEcharts.js"></script>
+		<script src="js/enterpriseEcharts.js"></script>
+		<script src="js/restaurantEcharts.js"></script>
+		<script src="js/activityEcharts.js"></script>
+		<script src="js/houseEcharts.js"></script>
+		<script src="js/bootstrap-treeview.js"></script>
+		<script src="js/Tree.js"></script>
+		<script src="js/spider_waterData.js"></script>
+		<script src="js/spider_pmData.js"></script>
+		<script src="js/spider_enterpriseData.js"></script>
+		<script src="js/spider_restaurantData.js"></script>
+		<script src="js/spider_activity.js"></script>
+		<script src="js/spider_houseData.js"></script>
+		<script src="js/dataTotal.js"></script>
+		<script src="js/server_status.js"></script>
+	</body>
+</html>

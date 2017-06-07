@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Transports</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Load Leaflet from CDN-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet-src.js"></script>
+
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet@2.0.4"></script>
+
+  <!-- Bootstrap -->
+  <link href="../Style/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="../Style/Bootstrap/js/bootstrap.min.js"></script>
+
+
+  <!-- datetime picker -->
+  <link rel="stylesheet" href="../Style/Bootstrap/css/bootstrap-datetimepicker.min.css">
+  <script src="../JS/bootstrap-datetimepicker.js"></script>
+
+  <!-- Leaflet Editable -->
+  <script src="../JS/Leaflet.Editable.js"></script>
+
+
+
+  <link rel="stylesheet" href="../Style/CSS/transports.css">
+</head>
+<body>
+<div id="container">
+
+  <div id="map">
+  </div>
+  <div class="container-fluid" id="float">
+    <div class="input-group">
+      <input class="input-medium search-query form-control" id="searchInput" type="text" id="searchFiled">
+      <span class="glyphicon glyphicon-search input-group-addon" style="background-color: #0f0f0f; border: 2px; border-color: #777777"></span>
+      <span class="glyphicon glyphicon-align-justify input-group-addon" style="background-color: #0f0f0f; border: 2px; border-color: #777777"></span>
+    </div>
+
+    <div class="tree well" id="tree" style="width: 100%">
+      <ul>
+        <li>
+          <span><i class="icon-folder-open"></i>交通</span>
+          <ul>
+            <!--<li Style="display:none;">-->
+            <li>
+              <span><i class="icon-plus-sign"></i>出租车</span>
+            </li>
+            <!--<li Style="display:none;">-->
+            <li>
+              <span><i class="icon-plus-sign"></i>慢性交通</span>
+            </li>
+            <!--<li Style="display:none;">-->
+            <li>
+              <span><i class="icon-plus-sign"></i>轨道交通</span>
+              <ul>
+                <!--<li Style="display:none;">-->
+                <li>
+                  <span><i class="icon-leaf"></i>地铁站点</span>
+                </li>
+                <!--<li Style="display:none;">-->
+                <li>
+                  <span><i class="icon-leaf"></i>地铁运行时刻表</span>
+                </li>
+                <!--<li Style="display:none;">-->
+                <li>
+                  <span><i class="icon-leaf"></i>地铁出站刷卡</span>
+                </li>
+                <!--<li Style="display:none;">-->
+                <li>
+                  <span><i class="icon-leaf"></i>地铁进出站比例</span>
+                </li>
+                <!--<li Style="display:none;">-->
+                <li>
+                  <span><i class="icon-leaf"></i>站点平均通勤时间</span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid" id="time">
+    <form role="form">
+      <div class="form-group date datepicker" id="datetimepicker">
+        <label for="InputStartTime">起始时间</label>
+        <!--<input type="text" class="form-control" id="InputStartTime">-->
+        <input type="text" id="InputStartTime" class="form-control" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="InputEndTime">结束时间</label>
+        <input type="text" class="form-control" id="InputEndTime" readonly>
+      </div>
+      <div class="form-group">
+        <label for="Interval">间隔时间</label>
+        <select class="form-control" id="Interval">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="Location">地图中心</label>
+        <select class="form-control" id="Location">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
+      <div class="text-center form-group " id="buttonGroup">
+        <button type="button" id="submit" class="btn btn-default btn-sm" style="margin-right: 3%; margin-top: 3%; background-color: rgb(192,0,0); border:0px">
+          <span class="glyphicon glyphicon-search"></span> Submmit
+        </button>
+        <button type="button" class="btn btn-default btn-sm" style="margin-left: 3%; margin-top: 3%; background-color: #777777; border: 0">
+          <span class="glyphicon glyphicon-refresh"></span> Reset
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="../JS/transports.js"></script>
+</body>
+</html>
